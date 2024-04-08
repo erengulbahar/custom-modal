@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modal Örneği</title>
+  </head>
+  <body>
+    <!-- Buton -->
+    <button onclick="sayHello('https://www.grovitus.com/')">Modeli Aç</button>
+
+    <script>
+      function sayHello(myURL) {
+        const mainDiv = document.createElement("div");
+        const closeButton = document.createElement("button");
+        const iFrame = document.createElement("iframe");
+
+        // Main div
+        mainDiv.id = "mainDiv";
+        mainDiv.style.width = "40rem";
+        mainDiv.style.height = "40rem";
+        mainDiv.style.padding = "0.5rem 0.5rem 0.5rem 0.5rem";
+        mainDiv.style.borderRadius = "0.5rem";
+        mainDiv.style.boxShadow = "1px 1px 10px gray";
+        mainDiv.style.backgroundColor = "white";
+        mainDiv.style.cursor = "move";
+        mainDiv.style.position = "absolute";
+        mainDiv.style.zIndex = "1";
+        mainDiv.style.top = "50%";
+        mainDiv.style.left = "50%";
+        mainDiv.style.transform = "translate(-50%, -50%)";
+        mainDiv.style.display = "flex";
+        mainDiv.style.flexDirection = "column";
+        mainDiv.style.gap = "0.2rem";
+        mainDiv.style.alignItems = "end";
+
+        // Button
+        closeButton.textContent = "X";
+        closeButton.style.width = "min-content";
+        closeButton.style.backgroundColor = "#002363";
+        closeButton.style.color = "white";
+        closeButton.style.borderColor = "#002363";
+        closeButton.style.borderRadius = "50%";
+
+        // Clicked 'X'
+        closeButton.onclick = function () {
+          document.body.removeChild(mainDiv);
+        };
+
+        // IFrame
+        iFrame.src = myURL;
+        iFrame.width = "100%";
+        iFrame.height = "100%";
+        iFrame.frameBorder = 0;
+
+        // IFrame append to main div
+        mainDiv.appendChild(closeButton);
+        mainDiv.appendChild(iFrame);
+
+        // Main div append to body
+        document.body.appendChild(mainDiv);
+
+        dragElement(document.getElementById("mainDiv"));
+      }
+
+      // Drag element
+      function dragElement(elmnt) {
+        var pos1 = 0,
+          pos2 = 0,
+          pos3 = 0,
+          pos4 = 0;
+        if (document.getElementById(elmnt.id + "header")) {
+          // if present, the header is where you move the DIV from:
+          document.getElementById(elmnt.id + "header").onmousedown =
+            dragMouseDown;
+        } else {
+          // otherwise, move the DIV from anywhere inside the DIV:
+          elmnt.onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+          e = e || window.event;
+          e.preventDefault();
+          // get the mouse cursor position at startup:
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+          document.onmouseup = closeDragElement;
+          // call a function whenever the cursor moves:
+          document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+          e = e || window.event;
+          e.preventDefault();
+          // calculate the new cursor position:
+          pos1 = pos3 - e.clientX;
+          pos2 = pos4 - e.clientY;
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+          // set the element's new position:
+          elmnt.style.top = elmnt.offsetTop - pos2 + "px";
+          elmnt.style.left = elmnt.offsetLeft - pos1 + "px";
+        }
+
+        function closeDragElement() {
+          // stop moving when mouse button is released:
+          document.onmouseup = null;
+          document.onmousemove = null;
+        }
+      }
+    </script>
+  </body>
+</html>
